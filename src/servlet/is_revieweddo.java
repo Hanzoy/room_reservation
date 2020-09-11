@@ -38,20 +38,20 @@ public class is_revieweddo extends HttpServlet {
                 HashMap<String, Object> data = new HashMap<>();
                 int size=0;
 
-                List<Map<String,Object>> list = new ArrayList<>();
+                List<Map<String, Object>> list = new ArrayList<>();
 
-                List<String> Days = OtherUtils.getTimes();
+                List<String> Days = OtherUtils.getMoreTimes(20);
                 for(String day: Days){
-                    List<Map<String,Object>> arr = SQL.getOrderByDateAndStatus(day,new Integer(statusS));
+                    List<Map<String, Object>> arr = SQL.getOrderByDateAndStatus(day,new Integer(statusS));
                     if((!arr.isEmpty())&&arr!=null) {
                         for (Map<String, Object> order : arr) {
                             size++;
-                            order.remove("meetingName");
-                            order.remove("remarks");
-                            order.remove("timeStamp");
-                            order.remove("applicant");
-                            order.remove("tel");
-                            order.remove("status");
+//                            order.remove("meetingName");
+//                            order.remove("remarks");
+//                            order.remove("timeStamp");
+//                            order.remove("applicant");
+//                            order.remove("tel");
+//                            order.remove("status");
                             list.add(order);
                         }
                     }

@@ -1,0 +1,151 @@
+define(function(require, exports, module) {
+
+	var utils = require('utils');
+
+	treeWidget.prototype = {
+		show : function() {
+			var self = this;
+			if (this.source) {
+				this.renderTree(this.source);
+			} else {
+				utils.doAjax(this.url, {
+					"showNoDept" : this.showNoDept
+				}).done(function(data) {
+					self.renderTree(data);
+				});
+			}
+		},
+
+		renderTree : function(source) {
+			var self = this;
+			$(self.element).jqxTree({
+				source : source,
+				width : '100%',
+				height : '300px',
+				checkboxes : self.checkboxes,
+				checkSize : 16
+			});
+			$(self.element).niceScroll();
+			$(self.element).jqxTree('selectItem', null);
+			// self.addIcon();
+			self.bindEvent();
+			// 默认选中第一个节点
+			var items = $(self.element).jqxTree("getItems");
+			if (items && items.length >0) {
+				var id = items[0].id;
+				var $li = $(self.element).find("li[id='" + id + "']")[0];
+				$(self.element).jqxTree('selectItem', $li);
+			} else {				
+				$('.tjyh-middle-table').html('无数据');
+				$('.tjyh-main-middel-count').html('0');	
+			}			
+			
+		},
+
+		bindEvent : function() {
+			var self = this;
+			$(self.element).on(
+					'select',
+					function(event) {
+						var args = event.args;
+						var item = $(self.element).jqxTree('getItem', args.element);
+						var parentItem = $(self.element).jqxTree('getItem', item.parentElement);
+						self.select && self.select(item, parentItem);
+					});
+			$(self.element).on(
+					'expand',
+					function(event) {
+						// var $tree = $(this);
+						var $element = $(event.args.element);
+						// var label = $tree.jqxTree('getItem',
+						// $element).label;
+						var loader = false;
+						var loaderItem = null;
+						var children = $element.find('ul:first').children();
+						$.each(children, function() {
+							var item = $(self.element).jqxTree('getItem', this);
+							if (item && item.label == '加载中...') {
+								loaderItem = item;
+								loader = true;
+								return false;
+							}
+						});
+						if (loader) {
+							// unblind 取消节点label显示的层级关系
+//							var unblind = true;
+							$.ajax({
+								url : self.url,
+								data : {
+									id : $element.context.id,
+									showNoDept : false
+								},
+								success : function(data) {
+//									var items = data;
+//									if (items.datas && items.datas.code && items.datas.code.rows) {
+//										var nodes = items.datas.code.rows;
+//									var nodes = data;
+//										var treenodes = [];
+//										for (var i = 0; i < nodes.length; i++) {
+//											var itemLabel = nodes[i].label;
+////											if (unblind)
+////												itemLabel = itemLabel
+////														.substring(
+////																itemLabel.lastIndexOf(setting.unblind) + 1,
+////																itemLabel.length);
+//											var treenode = {
+//												label : itemLabel,
+//												value : itemLabel,
+//												icon : "./public/images/folder.png",
+//												id : nodes[i].id,
+//												value : nodes[i].id
+//											};
+//											if (nodes[i].items != undefined 
+//													&& nodes[i].items != null 
+//													&& nodes[i].items.length > 0) {
+//												treenode.items = [ {
+//													label : "加载中...",
+//													value : "加载中...",
+//													icon : "./public/images/folder.png",
+//													id : "0"
+//												} ];
+//											}
+//											treenodes.push(treenode);
+//										}
+										$(self.element).jqxTree('addTo', data, $element[0]);
+										$(self.element).jqxTree('removeItem', loaderItem.element);
+//									}
+								}
+							});
+						}
+					});
+		},
+
+		addIcon : function() {
+			var self = this;
+			var items = $(this.element).jqxTree('getItems');
+			_.each(items, function(item) {
+				if (item.hasItems) {
+					$(item.element).children('div').after('<div class="tree-widget-icon tree-widget-folder"><i class="iconfont icon-addcircle"></i><i class="iconfont icon-delete"></i></div>');
+				} else {
+					$(item.element).children('div').after('<div class="tree-widget-icon tree-widget-item"><i class="iconfont icon-delete"></i></div>');
+				}
+
+				$(item.element).children('div').click(function() {
+					$(self.element).find('.tree-widget-icon').css('visibility', 'hidden');
+					$(this).parent().children('.tree-widget-icon').css('visibility', 'visible');
+				});
+			});
+		}
+	};
+
+	function treeWidget(options) {
+		this.source = options.source;
+		this.url = options.url;
+		this.element = options.element;
+		this.select = options.select;
+		this.checkboxes = options.checkboxes || false;
+		this.showNoDept = options.showNoDept || false;
+	}
+
+	return treeWidget;
+});

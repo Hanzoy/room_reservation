@@ -1,0 +1,436 @@
+define(function(require) {
+
+	var utils = require('utils');
+	var bs = require('./tjyh4approBS');
+	var TreeWidget = require('./treeWidget');
+	/** ******子页面******* */
+	// var sub1 = require('./sub1/sub1');
+	var viewConfig = {
+		initialize : function(params) {
+			/** ******注册子页面******* */
+			// this.pushSubView([sub1]);
+			var self = this;
+			this.currentDept = {};
+			this.positionId = "";
+			this.selected = params.selected || [];
+			this.callbackFunc = params.callbackFunc;
+			this.initUsers = params.initUsers || [];
+			this.selectusers = [];
+			this.showNoDept = params.showNoDept || false;// 是否显示无组织节点
+			bs.getPositionList().done(function(res) {
+				var indexView = utils.loadCompiledPage('tjyh4approIndexPage', require);
+				$.bhPaperPileDialog.show({
+					content : indexView.render(res),
+					render : function() {
+						self.initTab();
+						$('.tjyh-main-right-main').niceScroll();
+						self.renderSelected();
+					}
+				});
+			});
+
+			/** ******页面内事件通过eventMap统一管理******* */
+			this.eventMap = {
+				'[data-action="已选记录选中"]' : this.actionYxjlxz,
+				'[data-action="置顶"]' : this.actionTop,
+				'[data-action="置底"]' : this.actionBottom,
+				'[data-action="上移"]' : this.actionUp,
+				'[data-action="下移"]' : this.actionDown,
+				'[data-action="删除"]' : this.actionDelete,
+				'[data-action="中间表格checkbox"]' : this.actionTableRowSelect,
+				'[data-action="选择所有checkbox"]' : this.actionSelectAll,
+				'[data-action="搜索"]' : this.actionSearch,
+				'[data-action="确定"]' : this.actionSubmit,
+				'[data-action="全选清除"]' : this.actionSelectAllOrClear,
+				'[data-action="取消"]' : this.actionCancle,
+				'#positionSelect@change' : this.changePosition,
+				'.tjyh-search-key@keyup' : this.enterSearch
+			};
+		},
+
+		actionSelectAllOrClear : function() {
+			if ($('.tjyh-selected-item').not('.bh-ch-active').length > 0) {
+				$('.tjyh-selected-item').addClass('bh-ch-active');
+			} else {
+				$('.tjyh-selected-item').removeClass('bh-ch-active');
+			}
+		},
+
+		actionSubmit : function() {
+			if (this.callbackFunc) {
+				this.callbackFunc(this.selected);
+			}
+			$.bhPaperPileDialog.hide();
+		},
+
+		actionCancle : function() {
+			$.bhPaperPileDialog.hide();
+		},
+
+		enterSearch : function(event) {
+			if(event.keyCode==13) {
+				this.actionSearch();
+			}
+		},
+		
+		actionSearch : function() {
+			var keyWord = $('.tjyh-search-key').val().trim();
+			var positionId = $("#positionSelect").val();
+			this.initTableAndPagination(this.currentDept, positionId, keyWord);
+		},
+
+		actionSelectAll : function(event) {
+			var self = this;
+			var checkboxs = $('.tjyh-middle-table').find('.tjyh-middle-item').find('input');
+			var checked = $($("[data-action='选择所有checkbox']").find('input')[0]).prop('checked');
+			
+			if (self.selected.length == 0) {
+				// 无已选择人员，只可能全部选中，将checkbox全部选中，将待选人员全部加入已选择
+				if (checked) {
+					_.each(checkboxs, function(item) {
+						$(item).prop('checked', true);
+					});
+					self.selected = self.selected.concat(self.selectusers);
+				}
+			} else {
+				// 遍历checkbox并修改已选择人员
+				_.each(checkboxs, function(item) {
+					var id = $(item).val();
+					if (checked && !$(item).prop('checked')) {
+						// 全选：是，找到没选中的，选中，并且将人员添加到已选择中
+						$(item).prop('checked', true);
+						self.selected.push({
+							zgh : id,
+							xm : $('.tjyh-middle-item[data-x-id=' + id + ']').find('.xm').html(),
+							dept : $('.tjyh-middle-item[data-x-id=' + id + ']').find('.dept').html()
+						});
+					} else if (!checked && $(item).prop('checked')) {
+						// 全选：否，找到选中的，不选中，并且从已选择中将人员删除
+						$(item).prop('checked', false);
+						_.remove(self.selected, function(o) {
+							return o.zgh === id;
+						});
+					}
+				});
+			}
+			
+//			if (this.selected.length == 0) {
+//				if (checked) {
+//					this.selected = this.selected.concat(this.selectusers);
+//				}				
+//			} else {
+//				for (var i = 0; i < this.selectusers.length; i++) {
+//					var index = -1;
+//					for (var j = 0; j < this.selected.length; j++) {
+//						if (this.selectusers[i].zgh === this.selected[j].zgh) {
+//							index = j;
+//							break;
+//						}
+//					}
+//					if (checked) {
+//						if (index === -1) {
+//							this.selected.push(this.selectusers[i]);
+//						}
+//					} else {
+//						if (index != -1) {
+//							this.selected.splice(index, 1);
+//						}
+//					}
+//				}
+//			}
+			
+			this.renderSelected();
+		},
+
+		actionTableRowSelect : function(event) {
+			var id = $(event.currentTarget).attr('data-x-id');
+			var checked = $('.tjyh-middle-item[data-x-id=' + id + ']').find('input').prop('checked');
+			if (!checked) {
+				_.remove(this.selected, function(o) {
+					return o.zgh === id;
+				});
+			} else {
+				this.selected.push({
+					zgh : id,
+					xm : $('.tjyh-middle-item[data-x-id=' + id + ']').find('.xm').html(),
+					dept : $('.tjyh-middle-item[data-x-id=' + id + ']').find('.dept').html()
+				});
+			}
+			this.renderSelected();
+			this.checkAllOrNot();
+		},
+
+		actionYxjlxz : function(event) {
+			$(event.currentTarget).closest('.tjyh-selected-item').toggleClass('bh-ch-active');
+		},
+
+		/** 渲染已选择的数据* */
+		renderSelected : function() {
+			var selectedView = utils.loadCompiledPage('tjyh4approSelectedTpl', require);
+			$('.tjyh-main-right-main').html(selectedView.render({
+				datas : this.selected
+			}));
+			$('.tjyh-main-right-count').html(this.selected.length);
+		},
+
+		initTab : function() {
+			var self = this;
+			$('.tjrh-main-left-tab').jqxTabs({
+				position : 'top',
+				initTabContent : function(tab) {
+					self.initTabContent(tab);
+				}
+			});
+			$('.tjrh-main-left-tab').on('tabclick', function(event) {
+				var clickedItem = event.args.item;
+				if (clickedItem === 0) {
+					$('.tjyh-main-middle-select').show();					
+				} else {
+					$('.tjyh-main-middle-select').hide();
+				}
+				self.initTabContent(clickedItem);
+			});
+		},
+
+		initTabContent : function(tabIndex) {
+			var treeElem = tabIndex === 0 ? 'zzjg' : 'cyfz';
+			var self = this;
+			var tbTree = new TreeWidget({
+				url : bs.api[treeElem + 'treeModel'],
+				element : '.tjyh-' + treeElem + '-tree',
+				select : function(item) {
+					self.changeTreeSelected(item);
+				},
+				showNoDept : this.showNoDept
+			});
+			tbTree.show();
+		},
+
+		changeTreeSelected : function(item) {
+			if (item.value == "加载中...") {
+				return;
+			}
+			$('.tjyh-search-key').val("");// 每次选择新的树节点，清空搜索框内容
+			$('#positionSelect').val("");// 每次选择新的树节点，默认岗位为全部人员
+			this.currentDept = { id : item.id, name : item.value, isRoot : item.parentElement === null };
+			this.initTableAndPagination(this.currentDept);
+		},
+
+		initTableAndPagination : function(dept, positionId, keyWord) {
+			var self = this;
+			if (this.initUsers.length > 0) {
+				var kw = keyWord;
+				if (keyWord === undefined || keyWord === null || keyWord.replace(/(^\s*)|(\s*$)/g, "") === "") {
+					kw = "";
+				}
+				var dataUsers = [];
+				if (dept.isRoot) {
+					if (kw === "") {
+						dataUsers = this.initUsers;
+					} else {
+						$.each(this.initUsers, function(i, e) {
+							if (e.zgh.indexOf(kw) != -1 || e.xm.indexOf(kw) != -1) {
+								dataUsers.push(e);
+							}
+						});
+					}
+				} else {
+					$.each(this.initUsers, function(i, e) {
+						var inDept = false;
+						if (e.dept.indexOf("，") == -1) {
+							inDept = e.dept == dept.name;
+						} else {
+							inDept = $.inArray(dept.name, e.dept.split("，")) != -1;
+						}
+						if (inDept) {
+							if (kw === "") {
+								dataUsers.push(e);
+							} else if (e.zgh.indexOf(kw) != -1 || e.xm.indexOf(kw) != -1) {
+								dataUsers.push(e);
+							}							
+						}
+					});				
+				}
+				this.selectusers = dataUsers;
+				this.refreshTable({ datas : dataUsers });
+				$('.tjyh-middle-scroll').niceScroll();
+				$(".tjyh-main-middel-count").html("共" + dataUsers.length + "人");
+			} else {
+				if ($('.tjrh-main-left-tab').val() === 0) {
+					bs.getYyList({
+						deptId : dept.id,
+						positionId : positionId,
+						keyWord : keyWord
+					}).done(function(res) {
+						self.selectusers = res.datas;
+						self.refreshTable(res);
+						$('.tjyh-middle-scroll').niceScroll();
+						$(".tjyh-main-middel-count").html("共" + res.total + "人");
+					});			
+				} else {
+					bs.getGroupUserList({
+						groupId : dept.id,
+						keyWord : keyWord
+					}).done(function(res) {
+						self.selectusers = res.datas;
+						self.refreshTable(res);
+						$('.tjyh-middle-scroll').niceScroll();
+						$(".tjyh-main-middel-count").html("共" + res.total + "人");
+					});
+				}
+			}
+		},
+
+		refreshTable : function(res) {
+			var self = this;
+			var tableView = utils.loadCompiledPage('tjyh4approTableTpl', require);
+			$('.tjyh-middle-table').html(tableView.render(res));
+			_.each($('.tjyh-middle-table').find('.bh-checkbox'), function(item) {
+				var id = $(item).attr('data-x-id');
+				var index = _.findIndex(self.selected, function(o) {
+					return o.zgh === id;
+				});
+				if (index !== -1) {
+					$(item).find('input').prop('checked', true);
+				}
+			});
+			this.checkAllOrNot();
+		},
+
+		addSelectAllButtons : function() {
+			$('.tjyh-middle-page').find('.bh-pager').prepend('<div class="select-all-wrap" data-action="全选"><div class="tjyh-select-all" style="display:inline-block"></div><div class="select-all-text">全选</div></div>');
+			$('.tjyh-middle-page').find('.bh-pager').find('.tjyh-select-all').jqxCheckBox().on('change', function(e) {
+				var val = e.args.checked;
+				var obj = self.$element.find('.leftGrid .gm-member-user');
+				if (val) {
+					obj.jqxCheckBox('check');
+				} else if (val === false) {
+					obj.jqxCheckBox('uncheck');
+				}
+			});
+		},
+		actionDelete : function() {
+			var self = this;
+			if ($('.tjyh-selected-item.bh-ch-active').length === 0) {
+				return;
+			}
+			_.each($('.tjyh-selected-item.bh-ch-active'), function(item) {
+				var id = $(item).attr('data-x-id');
+				_.remove(self.selected, function(o) {
+					return o.zgh === id;
+				});
+				// 清除中间的选择
+				var checkedItem = _.find($('.tjyh-middle-table').find('.bh-checkbox'), function(item2) {
+					return $(item2).attr('data-x-id') === id;
+				});
+				if (checkedItem !== undefined) {
+					$(checkedItem).find('input').prop('checked', false);
+				}
+			});
+			this.renderSelected();
+			this.checkAllOrNot();
+		},
+
+		actionUp : function() {
+			if ($('.tjyh-selected-item.bh-ch-active').length === 0) {
+				return;
+			} else if ($('.tjyh-selected-item.bh-ch-active').length > 1) {
+				$.bhTip({
+					content : '只能操作一条记录'
+				});
+				return;
+			}
+			var id = $('.tjyh-selected-item.bh-ch-active').attr('data-x-id');
+			var selectedIndex = _.findIndex(this.selected, function(o) {
+				return o.zgh === id;
+			});
+			if (selectedIndex > 0) {
+				var tmp = this.selected[selectedIndex];
+				this.selected[selectedIndex] = this.selected[selectedIndex - 1];
+				this.selected[selectedIndex - 1] = tmp;
+			}
+			this.renderSelected();
+			$('.tjyh-selected-item[data-x-id=' + id + ']').addClass('bh-ch-active');
+		},
+
+		actionDown : function() {
+			if ($('.tjyh-selected-item.bh-ch-active').length === 0) {
+				return;
+			} else if ($('.tjyh-selected-item.bh-ch-active').length > 1) {
+				$.bhTip({
+					content : '只能操作一条记录'
+				});
+				return;
+			}
+			var id = $('.tjyh-selected-item.bh-ch-active').attr('data-x-id');
+			var selectedIndex = _.findIndex(this.selected, function(o) {
+				return o.zgh === id;
+			});
+			if (selectedIndex < this.selected.length - 1) {
+				var tmp = this.selected[selectedIndex];
+				this.selected[selectedIndex] = this.selected[selectedIndex + 1];
+				this.selected[selectedIndex + 1] = tmp;
+			}
+			this.renderSelected();
+			$('.tjyh-selected-item[data-x-id=' + id + ']').addClass('bh-ch-active');
+		},
+
+		actionBottom : function() {
+			if ($('.tjyh-selected-item.bh-ch-active').length === 0) {
+				return;
+			} else if ($('.tjyh-selected-item.bh-ch-active').length > 1) {
+				$.bhTip({
+					content : '只能操作一条记录!'
+				});
+				return;
+			}
+			var id = $('.tjyh-selected-item.bh-ch-active').attr('data-x-id');
+			var selectedObj = _.remove(this.selected, function(o) {
+				return o.zgh === id;
+			});
+			this.selected.push(selectedObj[0]);
+			this.renderSelected();
+			$('.tjyh-selected-item[data-x-id=' + id + ']').addClass('bh-ch-active');
+		},
+
+		actionTop : function(event) {
+			if ($('.tjyh-selected-item.bh-ch-active').length === 0) {
+				return;
+			} else if ($('.tjyh-selected-item.bh-ch-active').length > 1) {
+				$.bhTip({
+					content : '只能操作一条记录！'
+				});
+				return;
+			}
+			var id = $('.tjyh-selected-item.bh-ch-active').attr('data-x-id');
+			var selectedObj = _.remove(this.selected, function(o) {
+				return o.zgh === id;
+			});
+			this.selected.unshift(selectedObj[0]);
+			this.renderSelected();
+			$('.tjyh-selected-item[data-x-id=' + id + ']').addClass('bh-ch-active');
+		},
+		// 岗位切换事件
+		changePosition : function() {
+			var positionId = $("#positionSelect").val();
+			var keyWord = $('.tjyh-search-key').val().trim();
+			this.initTableAndPagination(this.currentDept, positionId, keyWord);
+		},
+		
+		checkAllOrNot: function() {
+			var checkboxs = $('.tjyh-middle-table').find('.tjyh-middle-item').find('input');
+			if (checkboxs === undefined || checkboxs === null || checkboxs.length === 0) {
+				$($("[data-action='选择所有checkbox']").find('input')[0]).prop('checked', false);
+				return;
+			}
+			var checkAll = true;
+			_.each(checkboxs, function(item) {
+				checkAll = checkAll && $(item).prop('checked');
+			});
+			 $($("[data-action='选择所有checkbox']").find('input')[0]).prop('checked', checkAll);
+		}
+		
+	};
+
+	return viewConfig;
+});

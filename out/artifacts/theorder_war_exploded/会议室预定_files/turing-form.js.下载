@@ -1,0 +1,612 @@
+function TuringForm(selector, url) {
+	var _selector = selector;
+	var _url = url;
+	var _page_name = _url.substr(_url.lastIndexOf("/"));
+	var _vue_form = null;
+	var _readonly = false;
+	var _extvars = {};
+	var _lost_data = {};
+	var _children_data = {};
+	var _print_form;
+	//配合oa 设计表单 内上传组件的使用 from oa add by jbxu 2019-05-24  南科大现场
+	// WIS_EMAP_CONFIG.cacheUploadBigFileSize = 200 * 1024; //上传文件最大尺寸7M
+	// WIS_EMAP_CONFIG.cacheUploadPreviewBigFileSize = 30 * 1024; //预览文件最大尺寸2M
+
+	WIS_EMAP_INPUT.extend({
+		xtype: 'doc-editor',
+		init: function(ele, params) {
+			$(ele).emapEditor({
+				width: '100%'
+			});
+		},
+		setValue: function(ele, name, val, root) {
+			ele.emapEditor('setValue', val[name]);
+		},
+		getValue: function(ele, formData) {
+			return ele.emapEditor('getValue');
+		},
+		disable: function(ele) {},
+		enable: function(ele) {}
+	});
+
+	return {
+		setValue: function(data, cb, param) {
+			// WIS_EMAP_INPUT.formSetValue($(_selector), data, {});
+			var obj = _vue_form.formData;
+			for (var prop in data) {
+				if (data.hasOwnProperty(prop)) {
+					if (obj[prop] !== undefined) {
+						if (_readonly === true) {
+							// xjb 2018-09-04 oa对只读表单取值时，获取到了中文
+							_lost_data = data;
+							if (data[prop + "_DISPLAY"] !== undefined) {
+								obj[prop] = data[prop + "_DISPLAY"];
+							} else {
+								//qiyu 2018-1-9 南师问题，字段值为null时，保留原始值。
+								obj[prop] = (data[prop] === null || data[prop] === "" ? obj[prop] : data[prop]);
+							}
+						} else {
+							//qiyu 2018-1-9 南师问题，字段值为null时，保留原始值。
+							obj[prop] = (data[prop] === null || data[prop] === "" ? obj[prop] : data[prop]);
+							// add from OA实施祁张杰 苏州市职业大学 by jbxu 2019-04-09
+							if (data[prop + "_DISPLAY"] !== undefined) {
+								obj[prop + "_DISPLAY"] = data[prop + "_DISPLAY"];
+							}
+						}
+					} else {
+						_lost_data[prop] = data[prop];
+					}
+				}
+			}
+
+			var print_data = $.extend(JSON.parse(JSON.stringify(_lost_data)), JSON.parse(JSON.stringify(_vue_form.formData)));
+			for (var key in _lost_data) {
+				if (key.indexOf("_DISPLAY") > -1) {
+					print_data[key.substring(0, key.indexOf("_DISPLAY"))] = _lost_data[key]
+				}
+			}
+
+			_print_form.formData = print_data;
+			window._oaFiledCb = cb;
+			window._oaFiledCbParam = param;
+		},
+		getValue: function() {
+			// return WIS_EMAP_INPUT.formGetValue($(_selector), {});
+			if (_readonly) {
+				return _lost_data;
+			} else {
+				return $.extend(_lost_data, _vue_form.formData);
+			}
+		},
+		loadPage2: function(merge_model, param) {
+			_readonly = param.readonly;
+			_extvars = param.extvars;
+
+			var config = buildConfig(_selector, _url + _page_name, merge_model, _extvars);
+			if (_readonly === true) {
+				config.data.emapConfig = setReadOnly(config.data.emapConfig);
+			}
+
+			//重新获取数据时，清空缓存   OA-3578   ghlong  2019-04-28
+			_lost_data = {};
+			config.data._lost_data = _lost_data;
+
+			_vue_form = new Vue(config);
+
+			//快速搜索联动
+			$(_vue_form.$el).removeData('emapLinkage');
+			var emapConfigArr = [];
+			var configArr = [];
+			var configData = config.data;
+			var emapConfigData = configData.emapConfig;
+			for (var i in emapConfigData) {
+				emapConfigArr.push(emapConfigData[i]);
+			}
+			for (var i in configData) {
+				configArr.push(configData[i]);
+			}
+			var linkModal = this.getLinkageModel(emapConfigArr, configArr);
+			if (linkModal.length > 0) {
+				$(_vue_form.$el).emapLinkage({
+					data: linkModal
+				});
+			};
+			initValidate(config.data.emapConfig);
+
+			// WIS_EMAP_INPUT.init($(_selector), {itemOptions: config.data.initConfig});
+
+			$(".form-validate-block", $(_selector)).hover(function() {
+				$(this).addClass("bh-actived");
+			}, function() {
+				$(this).removeClass("bh-actived");
+			});
+
+			var $print = $(_selector + "_print");
+			if ($print.length > 0) {
+				$print.remove();
+			}
+			$(_selector).after("<div class='" + _selector.substr(1) + "_print' style='display:none'></div>")
+
+			var printConfig = buildConfig(_selector + "_print", _url + _page_name, merge_model, _extvars);
+			printConfig.data.emapConfig = setReadOnly(printConfig.data.emapConfig, {
+				textarea2static: true
+			});
+			printConfig.data._lost_data = _lost_data;
+			_print_form = new Vue(printConfig);
+
+			return _vue_form;
+		},
+		getLinkageModel: function(model, options) { // 表单高级联动配置转换
+			return WIS_EMAP_SERV.cloneObj(model).filter(function(item) {
+				var linkage = [];
+				if (item.linkage && typeof item.linkage === 'string') {
+					try {
+						item.linkage = JSON.parse(item.linkage.replace(/\'/g, '"'))
+					} catch (e) {
+						console && console.error('无效的linkage参数格式，必须是对象数组或序列化的字符串')
+					}
+				}
+				if (item.linkageBy || item['form.linkageBy']) {
+					linkage.push({
+						type: 'data',
+						linkageBy: item['form.linkageBy'] || item.linkageBy,
+						linkageName: item['form.linkageName'] || item.linkageName
+					})
+				}
+				if (options.linkage && options.linkage[item.name]) {
+					linkage = linkage.concat(options.linkage[item.name])
+				}
+				if (linkage.length) {
+					item.linkage = linkage;
+				}
+				return !!item.linkage
+			})
+		},
+		setChildrenData: function(key, data) {
+			_children_data[key] = data;
+		},
+		getChildrenData: function(key) {
+			return _vue_form.childrenData[key];
+		},
+		isVaild: function() {
+			//隐藏的元素，不要再做校验
+			var result = true;
+			$('[data-name][xtype]').each(function() {
+				var name = $(this).attr('data-name');
+				if ($(this).is(':visible') === true && $(_selector).bhValidate('validate', name) === false) {
+					result = false;
+				}
+			})
+			return result;
+		},
+		getBindConfig: function() {
+			return _vue_form.emapConfig;
+		},
+		getInitConfig: function() {
+			return _vue_form.initConfig;
+		},
+		saveUpload: function(param) {
+
+			var items = $('[xtype=uploadphoto], [xtype=uploadfile], [xtype=uploadsingleimage], [xtype=uploadmuiltimage], [xtype="cache-upload"]', $(_selector));
+			var items_length = items.length;
+			var result_array = [];
+			var result_defer = $.Deferred();
+			result_defer.fail(function() { // 对于表单保存操作 中 上传文件保存操作失败的处理
+				$.bhTip && $.bhTip({
+					content: '上传文件保存失败',
+					state: 'danger',
+					iconClass: 'icon-close'
+				});
+			});
+			if (items_length === 0) {
+				// 表单中无上传组件的情况下调用保存上传方法
+				console && console.warn("There's no upload component in form, don't call the 'saveUploadSync' method !");
+				setTimeout(function() {
+					result_defer.resolve([]);
+				}, 10);
+			} else {
+				items.each(function() {
+					var defer;
+					//过滤只读状态的上传组件
+					if ($(this).attr('data-disabled')  ==  true  ||  $(this).attr('data-disabled')  ==  'true')  {
+						items_length--;
+						return  true;
+					}
+					switch ($(this).attr('xtype')) {
+						case 'uploadfile':
+							defer = $(this).emapFileUpload('saveUpload', param);
+							break;
+						case 'uploadsingleimage':
+							defer = $(this).emapSingleImageUpload('saveUpload', param);
+							break;
+						case 'uploadmuiltimage':
+							defer = $(this).emapImageUpload('saveUpload', param);
+							break;
+						case 'cache-upload':
+							defer = $(this).emapUpload('saveUpload', param);
+							break;
+					}
+					defer.done(function(res) {
+						if (res.success) {
+							result_array.push(res);
+							if (result_array.length == items_length) {
+								result_defer.resolve(result_array);
+							}
+						} else {
+							result_defer.reject();
+						}
+					}).fail(function(error) {
+						result_defer.reject();
+					});
+				});
+			}
+
+			return result_defer;
+		},
+		printPage: function() {
+			var contextpath = window.location.href.substring(0, window.location.href.indexOf("/sys/"))
+
+			closePrint();
+
+			var oHiddFrame = document.createElement("iframe");
+			oHiddFrame.id = _selector.substr(1) + "_print_iframe";
+			oHiddFrame.onload = setPrint;
+			oHiddFrame.style.visibility = "hidden";
+			oHiddFrame.style.position = "fixed";
+			oHiddFrame.style.right = "0";
+			oHiddFrame.style.bottom = "0";
+			oHiddFrame.src = contextpath + "/sys/oapublic/preview.do";
+			document.body.appendChild(oHiddFrame);
+		}
+	};
+
+	function buildConfig(selector, path, merge_model, extVars) {
+		var mm = {};
+		if ($.isArray(merge_model) && merge_model.length > 0) {
+			merge_model.map(function(model) {
+				mm[model.name] = model;
+			});
+		}
+
+		var js = {};
+		$.ajax({
+			url: path + ".js",
+			dataType: 'text',
+			cache: false,
+			async: false
+		}).done(function(res) {
+			eval("js = " + res);
+			// param = $.extend(param, ext_param);
+		});
+		$.ajax({
+			url: path + ".html",
+			dataType: 'html',
+			cache: false,
+			async: false
+		}).done(function(res) {
+			// page = res;
+			$(selector).append(res);
+			// var template = Hogan.compile(res);
+		});
+
+		// js
+		// extVars
+		for (var key in js.data.formData) {
+			var value = js.data.formData[key];
+			if (value !== "" && extVars[value] !== undefined) {
+				js.data.formData[key] = extVars[value];
+			} else {
+				if (value.indexOf("{{") > -1) {
+					var val = "";
+					switch (value) {
+						case "{{true}}":
+							val = true;
+							break;
+						case "{{false}}":
+							val = false;
+							break;
+						default:
+							val = value.replace(/({{(.*?)}})/g, function(match, p1, p2) {
+								if (extVars[p1] !== undefined) {
+									return extVars[p1];
+								} else {
+									return p2;
+								}
+							});
+							break;
+					}
+					js.data.formData[key] = val;
+					// js.data.formData[key] = eval(value.replace("{{", "").replace("}}", ""));
+				}
+			}
+		}
+
+		for (var prop in js.data.initConfig) {
+			var field = js.data.initConfig[prop];
+			for (var key in field) {
+				var value = field[key];
+				if (key === 'datasize') {
+					js.data.emapConfig[prop].checkSize = Number(value);
+				}
+				if (value !== "" && extVars[value] !== undefined) {
+					field[key] = extVars[value];
+				} else {
+					if (value.indexOf("{{") > -1) {
+						var val = "";
+						switch (value) {
+							case "{{true}}":
+								val = true;
+								break;
+							case "{{false}}":
+								val = false;
+								break;
+							default:
+								val = value.replace(/({{(.*?)}})/g, function(match, p1, p2) {
+									if (extVars[p1] !== undefined) {
+										return extVars[p1];
+									} else {
+										return p2;
+									}
+								});
+								break;
+						}
+						field[key] = val;
+						// field[key] = eval(value.replace("{{", "").replace("}}", ""));
+					}
+				}
+			}
+		}
+
+		var config = $.extend(true, {
+			el: selector,
+			data: {
+				"emapConfig": mm,
+				"childrenData": _children_data
+			},
+			methods: {
+				onFormDataChange: function(val) {
+					this.formData[val.name] = val.value;
+
+					$(this.$el).trigger("turingFormDataChange", [val]);
+				},
+				addrow: function() {
+					this.childrenData.subtable.push({
+						F1: this.formData.F1,
+						F2: this.formData.F2
+					});
+				},
+				removerow: function(item, index) {
+					item.splice(index, 1);
+				}
+			},
+			components: {}
+		}, js);
+
+		return config;
+	}
+
+	function initValidate(obj) {
+		var dataModel = [];
+		for (var prop in obj) {
+			if (obj.hasOwnProperty(prop)) {
+				if (obj[prop].dataType === "BigString") {
+					obj[prop].dataSize = undefined;
+				}
+				dataModel.push(obj[prop]);
+			}
+		}
+		$(_selector).bhValidate({
+			textareaEasyCheck: false,
+			fieldModel: WIS_EMAP_SERV.convertModel(dataModel, "form"),
+			validateView: {
+				// 显示字段的校验信息
+				showValidate: function(fieldElement, message) {
+					var field_row = fieldElement.closest('.form-validate-block');
+					var error_info = field_row.find('.jqx-validator-error-info');
+					if (
+						field_row.hasClass('jqx-validator-error-container') &&
+						error_info.length && error_info.data('message') == message
+					) return;
+					fieldElement.addClass('jqx-validator-error-control');
+					if (error_info.length > 0) {
+						error_info.remove();
+					}
+					field_row.addClass('jqx-validator-error-container')
+						.append('<div class="bh-form-group jqx-validator-error-info bh-pv-4" style="display: block;" data-message="' + message + '">' + message + '</div>');
+				},
+				// 隐藏字段的校验信息, 若未传name，则隐藏所有的字段校验信息
+				hideValidate: function(fieldElement) {
+					fieldElement.removeClass('jqx-validator-error-control');
+					var field_row = fieldElement.closest('.form-validate-block');
+					field_row.removeClass('jqx-validator-error-container')
+						.find('.jqx-validator-error-info').remove();
+				}
+			}
+		});
+	}
+
+	function setReadOnly(obj, param) {
+		for (var prop in obj) {
+			if (obj.hasOwnProperty(prop)) {
+				obj[prop].readonly = true;
+				if (param !== undefined && param.textarea2static !== undefined && param.textarea2static === true && obj[prop].xtype !== undefined && obj[prop].xtype === "textarea") {
+					//2019-2-12 form 李俊 add by xujiabin 表单中的大文本打印显示完全并带格式
+					obj[prop].xtype = "static";
+				}
+			}
+		}
+		return obj;
+	}
+
+	function closePrint() {
+		if (this.__container__) {
+			$(this.__container__).remove();
+		}
+		// document.body.removeChild(this.__container__);
+		$("#" + _selector.substr(1) + "_print_iframe").remove();
+	}
+
+	function setPrint() {
+		var $print = $(_selector + "_print");
+		$("[style='display: none;']", $print).remove();
+
+		var printHtml = $print.html().replace('style="height: 100%;"', '');
+		this.contentWindow.doc.innerHTML = "<div class='bh-docs-page'>" + printHtml + "</div>";
+		this.contentWindow.__container__ = this;
+		// this.contentWindow.onbeforeunload = closePrint;
+		// this.contentWindow.onafterprint = closePrint;
+		this.contentWindow.focus(); // Required for IE
+		var that = this;
+		setTimeout(function() {
+			if (that.contentWindow.doPrint) {
+				that.contentWindow.doPrint();
+			} else {
+				that.contentWindow.print();
+			}
+			// $(_selector + "_print").remove();
+		}, 500)
+	}
+}
+
+Vue.component('emap-field', {
+	template: '<div v-bind:class="classObject"><div class="control"></div></div>',
+	props: ["value", "disable", "model", "necessary", "field", "init"],
+	computed: {},
+	methods: {
+		changeStatus: function(status) {
+			this.classObject["bh-actived"] = status;
+		}
+	},
+	data: function() {
+		return {
+			classObject: {
+				"form-validate-block": true,
+				"bh-actived": false
+			}
+		};
+	},
+	mounted: function() {
+		var self = this;
+		if (this.model === undefined) {
+			return;
+		}
+		var $control = $(".control", this.$el);
+		var maxSize = 0;
+		this.xtype = this.model.xtype;
+		if (this.xtype == "textarea" && self.init !== undefined && self.init.textareaeasycheck != "true") {
+			if (this.model["checkSize"] === undefined) {
+				// 除以3之后向下取整 add form 南科大 2019-06-11 by jbxu
+				this.model["checkSize"] = (this.model["dataSize"] === undefined ? 99999 / 3 : Math.floor(Number(this.model["dataSize"]) / 3)).toFixed();
+			}
+		}
+		this.model["form.required"] = this.necessary;
+		var model = WIS_EMAP_SERV.convertModel([this.model], "form");
+		var form_param = {};
+		// add from 南科大现场 by jbxu 2018-9-2-28 改showPlaceholder 为改showplaceholder
+		if (self.init !== undefined && self.init.showplaceholder !== undefined) {
+			form_param["showplaceholder"] = true;
+			model[0].placeholder = self.init.showplaceholder;
+		}
+		var field_html = "";
+		if (model[0].get("hidden") !== true) {
+			if (self.init && self.init.optiondata) {
+				model[0]['optionData'] = self.init.optiondata;
+			}
+			field_html = WIS_EMAP_INPUT.renderPlaceHolder(model[0], 'form', form_param);
+			$control.html(field_html);
+			if (this.xtype == "textarea") {
+				$('[xtype=textarea]', $control).addClass('bh-mv-8');
+				var newAttr = $('[xtype=textarea]', $control).data('attr');
+				var newJSONParam = JSON.parse(newAttr.JSONParam);
+				//2018-12-17 form 李娥 add by xujiabin 高度太低的问题 最低100px
+				var textareaHeight = $('[xtype=textarea]', $control).parents('td').height() - 23 - 16;
+				if (textareaHeight > 100) {
+					newJSONParam.minHeight = textareaHeight;
+				}
+				//2019-2-12 form 李俊 add by xujiabin 表单中的大文本全部高度自适应
+				newJSONParam.autoHeight = true;
+				if (model[0].readonly) {
+					newJSONParam.readonly = true;
+				}
+				newAttr.JSONParam = JSON.stringify(newJSONParam);
+				$('[xtype=textarea]', $control).data('attr', newAttr);
+			}
+		}
+		$control.on("_formChange", function(event) {
+			var formData = {};
+			var val = WIS_EMAP_INPUT.getValue($("[data-name=" + self.model.name + "]", $control), formData);
+			// self.value = val;
+			self.$emit("on-formdata-change", {
+				name: self.field,
+				value: val,
+				control: this
+			});
+		});
+
+		$control.on("_setFormDataValue", function(event, data) {
+			self.$emit("on-formdata-change", {
+				name: data.field,
+				value: data.value,
+				control: this
+			});
+		});
+
+		this.$watch('value', function(newVal) {
+			if (newVal !== undefined) {
+				if (WIS_EMAP_INPUT.getValue($("[data-name=" + self.model.name + "]", $control), {}) === newVal) return;
+				var val = {};
+				val[this.model.name] = newVal;
+				if (self.$parent.$data._lost_data !== undefined && self.$parent.$data._lost_data[this.model.name + "_DISPLAY"] !== undefined) {
+					val[this.model.name + "_DISPLAY"] = self.$parent.$data._lost_data[this.model.name + "_DISPLAY"];
+				} else {
+					//下拉树组件  xtype="multi-tree2"  OA-3595  ghlong 2019-04-28
+					var _DISPLAYVALUE = self.$parent.$data.formData && self.$parent.$data.formData[this.model.name + '_DISPLAY'];
+					if (_DISPLAYVALUE) {
+						val[this.model.name + "_DISPLAY"] = _DISPLAYVALUE;
+					}
+				}
+				var param = {};
+				//if (self.model.readonly) {
+				//  param.readonly = true;
+				//}
+				WIS_EMAP_INPUT.formSetValue($control, val, param);
+				window._oaFiledCb && window._oaFiledCb(self.model.name, newVal, window._oaFiledCbParam);
+			}
+		});
+
+		var param = {
+			itemOptions: {}
+		};
+		var opts = $.extend({}, window.emapField.defaultConfig[this.xtype], self.init);
+		param.itemOptions[this.model.name] = opts;
+		WIS_EMAP_INPUT.init($control, param);
+
+		if (this.value !== undefined && this.value !== "") {
+			var val = {};
+			var newValue = this.value;
+
+			if (self.init !== undefined && self.init.format !== undefined) {
+				newValue = moment(this.value).format(self.init.format);
+			}
+			// add from OA实施祁张杰 苏州市职业大学 by jbxu 2019-04-09
+			var _DISPLAYVALUE = self.$parent.$data.formData && self.$parent.$data.formData[this.model.name + '_DISPLAY'];
+			if (this.model && this.model.readonly && _DISPLAYVALUE) {
+				val[this.model.name] = _DISPLAYVALUE;
+			} else {
+				val[this.model.name] = newValue;
+			}
+			WIS_EMAP_INPUT.formSetValue($control, val, {});
+		}
+	},
+	beforeDestroy: function() {
+		// $(this.$el).emapEditor('destroy');
+	}
+});
+
+window.emapField = {
+	"defaultConfig": {
+		"cache-upload": {
+			"displayType": "file"
+		}
+	}
+};

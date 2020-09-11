@@ -1,0 +1,82 @@
+.color-Blue {
+    background-color: #3248a8;
+    z-index: -999999;
+}
+
+.color-white {
+    color: #d0d0d0;
+}
+
+a,
+a:link,
+a:visited,
+a:active {
+    text-decoration: none;
+    background-color: #3248a8;
+    color: #d0d0d0;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.xhh_Brand {
+    font-size: 15px;
+    padding-top: 18px;
+    padding-left: 9px;
+}
+
+.xhh_rsda {
+    border: solid;
+    border-width: 1px;
+    height: 40px;
+    min-height: 3rem;
+    max-height: 13rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    /*overflow-y:scroll;*/
+    /*overflow-x:hidden;*/
+    border: 1px solid #d0d0d0;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.xhh_rsda>span {
+    float: left;
+    font-size: 16px;
+    margin-top: 10px;
+    margin-right: 4px;
+}
+
+.color-blue {
+    color: #ffffff;
+    z-index: 99;
+}
+
+.xhh_rsd {
+    height: 120px;
+}
+
+.room {
+    position: relative;
+    top: 30px;
+    left: 10px;
+}
+
+.xhh_lflf {
+    padding-left: 5%;
+}
+
+.xhh_sck {
+    position: relative;
+    left: 30px;
+}
+
+.xhh_btn {
+
+}
+.qc{
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+span{word-break:normal; width:auto; display:block; white-space:pre-wrap;word-wrap : break-word ;overflow: hidden ;}

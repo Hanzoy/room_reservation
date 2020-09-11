@@ -1,0 +1,75 @@
+define(function(require) {
+
+	var utils = require('utils');
+	var mock = require('./mock');
+
+	var bs = {
+		api : {
+			pageModel : window.WIS_CONFIG.RESOURCE_SERVER + '/fe_components/mock/page_model.json',
+			table : window.WIS_CONFIG.RESOURCE_SERVER + '/fe_components/mock/table.json',
+			advancedQueryModel : window.WIS_CONFIG.RESOURCE_SERVER + '/fe_components/mock/advencedQueryModel.json',
+			rowDataDetailUrl : window.WIS_CONFIG.RESOURCE_SERVER + '/fe_components/mock/userInfo.json',
+			// zzjgtreeModel : mock['treeModel'],
+			zzjgtreeModel : contextPath + "/sys/oasysconfig/tree4Select2.do",
+			cyfztreeModel :  contextPath + "/sys/oasysconfig/group/treeSelect.do",
+			//cyfztreeModel :mock['treeModel'],				
+			// yyList : mock['yyList'],
+			yyList : contextPath + "/sys/oasysconfig/getUsers4Sel.do",
+			groupUserList : contextPath + "/sys/oasysconfig/group/getGroupUsersSel.do",
+			// baseData : mock['baseData']
+			baseData : contextPath + "/sys/oasysconfig/getInitUsers.do",
+			getPositionList : contextPath + "/sys/oasysconfig/position/getPositionList.do"
+		},
+
+		getRowDataDetails : function() {
+			return utils.fetch({
+				url : this.api.rowDataDetailUrl,
+				data : {},
+				/** *parser用于对接口返回的数据做进一步处理** */
+				parser : function(res) {
+				}
+			});
+		},
+
+		getYyList : function(params) {
+			return utils.fetch({
+				url : this.api.yyList,
+				data : params,
+				/** *parser用于对接口返回的数据做进一步处理** */
+				parser : function(res) {
+				}
+			});
+		},
+
+		getGroupUserList : function(params) {
+			return utils.fetch({
+				url : this.api.groupUserList,
+				data : params,
+				/** *parser用于对接口返回的数据做进一步处理** */
+				parser : function(res) {
+				}
+			});
+		},
+		
+		getBaseData : function(params) {
+			return utils.fetch({
+				url : this.api.baseData,
+				data : params,
+				/** *parser用于对接口返回的数据做进一步处理** */
+				parser : function(res) {
+				}
+			});
+		},
+		
+		getPositionList : function() {
+			return utils.fetch({
+				url : this.api.getPositionList,
+				/** *parser用于对接口返回的数据做进一步处理** */
+				parser : function(res) {
+				}
+			});
+		}
+	};
+
+	return bs;
+});

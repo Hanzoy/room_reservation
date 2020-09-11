@@ -1,0 +1,353 @@
+/*
+Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+*/
+
+body
+{
+	/* Font */
+	font-family: sans-serif, Arial, Verdana, "Trebuchet MS";
+	font-size: 12px;
+
+	/* Text color */
+	color: #333;
+
+	/* Remove the background color to make it transparent */
+	background-color: #fff;
+	box-sizing: border-box;
+	margin: 20px;
+}
+
+.bh-docs-page,
+.cke_editable,
+.bh-docs-page_print
+{
+	font-size: 10.5pt;
+	/*line-height: 1.6;*/
+
+	/* Fix for missing scrollbars with RTL texts. (#10488) */
+	word-wrap: break-word;
+}
+
+.bh-docs-page table td,
+.bh-docs-page_print table td{
+	position: static;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+.bh-docs-page .ivu-form-item, .bh-docs-page_print .ivu-form-item {
+	margin-bottom:0;
+}
+.emap-upload-file-wrap .filename {
+	max-width: 350px;
+}
+blockquote
+{
+	font-family: Georgia, Times, "Times New Roman", serif;
+	padding: 2px 0;
+	border-style: solid;
+	border-color: #ccc;
+	border-width: 0;
+}
+
+.cke_contents_ltr blockquote
+{
+	padding-left: 20px;
+	padding-right: 8px;
+	border-left-width: 5px;
+}
+
+.cke_contents_rtl blockquote
+{
+	padding-left: 8px;
+	padding-right: 20px;
+	border-right-width: 5px;
+}
+
+a
+{
+	color: #0782C1;
+}
+
+/*ol,ul,dl
+{
+	*margin-right: 0px;
+	padding: 0 40px;
+}*/
+
+h1,h2,h3,h4,h5,h6
+{
+	font-weight: normal;
+	line-height: 1.2;
+}
+
+hr
+{
+	border: 0px;
+	border-top: 1px solid #ccc;
+}
+
+img.right
+{
+	border: 1px solid #ccc;
+	float: right;
+	margin-left: 15px;
+	padding: 5px;
+}
+
+img.left
+{
+	border: 1px solid #ccc;
+	float: left;
+	margin-right: 15px;
+	padding: 5px;
+}
+
+pre
+{
+	white-space: pre-wrap; /* CSS 2.1 */
+	word-wrap: break-word; /* IE7 */
+	-moz-tab-size: 4;
+	tab-size: 4;
+}
+
+.marker
+{
+	background-color: Yellow;
+}
+figure
+{
+	text-align: center;
+	border: solid 1px #ccc;
+	border-radius: 2px;
+	background: rgba(0,0,0,0.05);
+	padding: 10px;
+	margin: 10px 20px;
+	display: inline-block;
+}
+
+figure > figcaption
+{
+	text-align: center;
+	display: block; /* For IE8 */
+}
+
+a > img {
+	padding: 1px;
+	margin: 1px;
+	border: none;
+	outline: 1px solid #0782C1;
+}
+
+/* Widget Styles */
+.code-featured
+{
+	border: 5px solid red;
+}
+
+.math-featured
+{
+	padding: 20px;
+	box-shadow: 0 0 2px rgba(200, 0, 0, 1);
+	background-color: rgba(255, 0, 0, 0.05);
+	margin: 10px;
+}
+
+.image-clean
+{
+	border: 0;
+	background: none;
+	padding: 0;
+}
+
+.image-clean > figcaption
+{
+	font-size: .9em;
+	text-align: right;
+}
+
+.image-grayscale
+{
+	background-color: white;
+	color: #666;
+}
+
+.image-grayscale img, img.image-grayscale
+{
+	filter: grayscale(100%);
+}
+
+.embed-240p
+{
+	max-width: 426px;
+	max-height: 240px;
+	margin:0 auto;
+}
+
+.embed-360p
+{
+	max-width: 640px;
+	max-height: 360px;
+	margin:0 auto;
+}
+
+.embed-480p
+{
+	max-width: 854px;
+	max-height: 480px;
+	margin:0 auto;
+}
+
+.embed-720p
+{
+	max-width: 1280px;
+	max-height: 720px;
+	margin:0 auto;
+}
+
+.embed-1080p
+{
+	max-width: 1920px;
+	max-height: 1080px;
+	margin:0 auto;
+}
+
+
+/*边框样式*/
+.wistable[bh-docs-border-style="1"] td{
+	border-width: 1pt !important;
+}
+
+.wistable[bh-docs-border-style="2"] td{
+	border-width: 2pt !important;
+}
+
+.wistable[bh-docs-border-style="none"] td{
+	border: none !important;
+}
+
+/*边框颜色*/
+.wistable[bh-docs-border-color="black"] td{
+	border-color: #000 !important;
+}
+
+.wistable[bh-docs-border-color="red"] td{
+	border-color: red !important;
+}
+
+.wistable[bh-docs-border-color="blue"] td{
+	border-color: blue !important;
+}
+
+.wistable{
+	margin: 0 auto;
+	width: 1104px;
+}
+.wistable-fixed{
+	table-layout:fixed;
+}
+.wistable tbody{
+	border: inherit;
+}
+.wistable tr{
+	border: inherit;
+}
+.wistable td{
+	border: inherit !important;
+}
+
+.wistable.a4{
+	width: 100%!important;
+}
+.wistable.inner{
+	width: 100%!important;
+	height: 100%!important;
+}
+.wistable.inner td{
+	border-right: 1px solid;
+}
+.wistable.inner td:last-child{
+	border-right: none;
+}
+
+.jqx-validator-error-container {
+    background-color: #fdf0ef!important
+}
+
+.jqx-validator-error-container .jqx-validator-error-control {
+    border: 2px solid #e24034;
+    outline: 0
+}
+
+.jqx-validator-error-container .jqx-validator-error-control:focus {
+    border-color: #e24034;
+    outline: 0;
+    box-shadow: none
+}
+
+.jqx-validator-error-info {
+    color: #E24034
+}
+
+.bh-docs-page .form-validate-block {
+    position: relative;
+    padding: 0;
+    min-height: 0
+}
+
+.bh-docs-page .form-validate-block [xtype],
+.bh-docs-page .form-validate-block [xtype] a,
+.bh-docs-page .form-validate-block [xtype] div,
+.bh-docs-page .form-validate-block [xtype] span,
+.bh-docs-page span[field]{
+	font-size: 10.5pt !important;
+}
+
+.bh-docs-page_print .form-validate-block [xtype],
+.bh-docs-page_print .form-validate-block [xtype] a,
+.bh-docs-page_print .form-validate-block [xtype] div,
+.bh-docs-page_print .form-validate-block [xtype] span,
+.bh-docs-page_print span[field]{
+	font-size: 10.5pt !important;
+}
+
+.bh-docs-page .form-validate-block .jqx-validator-error-info {
+    display: none!important;
+    position: absolute;
+    top: -26px;
+    background: #ef971c;
+    color: #fff;
+    right: 0;
+    line-height: 12px;
+    padding: 2px 8px;
+    border-right-color: transparent;
+    border-bottom-color: transparent
+}
+
+.bh-docs-page .form-validate-block .jqx-validator-error-info.bh-col-md-1,.bh-table-form .form-validate-block .jqx-validator-error-info.bh-col-md-10,.bh-table-form .form-validate-block .jqx-validator-error-info.bh-col-md-11,.bh-table-form .form-validate-block .jqx-validator-error-info.bh-col-md-2,.bh-table-form .form-validate-block .jqx-validator-error-info.bh-col-md-3,.bh-table-form .form-validate-block .jqx-validator-error-info.bh-col-md-4,.bh-table-form .form-validate-block .jqx-validator-error-info.bh-col-md-5,.bh-table-form .form-validate-block .jqx-validator-error-info.bh-col-md-6,.bh-table-form .form-validate-block .jqx-validator-error-info.bh-col-md-7,.bh-table-form .form-validate-block .jqx-validator-error-info.bh-col-md-8,.bh-table-form .form-validate-block .jqx-validator-error-info.bh-col-md-9 {
+    width: auto
+}
+
+.bh-docs-page .form-validate-block .jqx-validator-error-info:after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #ef971c;
+    font-size: 0;
+    line-height: 0;
+    position: absolute;
+    top: 21px;
+    right: 6px
+}
+
+.bh-docs-page .form-validate-block.bh-actived .jqx-validator-error-info {
+    display: block!important
+}
+
+/* add from OA实施李俊李娥 by jbxu 2019-03-20 作用于只读表单textarea的文本打印的效果 */
+.form-validate-block .control div[xtype=static] {
+    white-space: pre-wrap;
+}

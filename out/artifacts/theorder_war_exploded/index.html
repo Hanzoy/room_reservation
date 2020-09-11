@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>天理计算机学院会议室预约</title>
+
+    <!-- Bootstrap -->
+    <link href="./框架/bootstrap-3.3.7-dist/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/index-css.css">
+    <link rel="stylesheet" href="./css3多种边框按钮悬停特效_files/style.css">
+
+    <link rel="stylesheet" href="./css/style.css">
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-defaultr myBar">
+        <div class="container-fluid color-Blue">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header color-white">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand color-white xhover" href="#">计算机科学与工程学院</a>
+                <span class="navbar-brand xhh_Brand  " href="#">会议室预定</span>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" class="color-white">Link</a></li>
+                    <li>
+                        <a href="#" class="color-white" id="sign">管理员入口</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+    <!-- 导航栏 -->
+    <div class="xhh_sewe">
+        <div id="u297" class="ax_default _paginator_basic_normal position1 lastWeek" data-action="hyszt_lastWeek">
+            <img id="u297_img" class="img lastWeek" src="./u297.png">
+            <!-- Unnamed () -->
+            <div id="u298" class="text">
+                <p id="cache0"><span id="cache1" class="position4 lastWeek">&lt;</span></p>
+            </div>
+        </div>
+        <div id="u310" class="ax_default _paginator_basic_normal position2">
+            <img id="u310_img" class="img" src="./u310.png">
+            <!-- Unnamed () -->
+            <div id="u311" class="text">
+                <p id="cache2"><span id="cache3" data-action="hyszt_currentWeek" class="position5">本周</span></p>
+            </div>
+        </div>
+        <div id="u299" class="ax_default _paginator_basic_normal position3 nextWeek" data-action="hyszt_nextWeek">
+            <img id="u299_img" class="img nextWeek" src="./u297.png">
+            <!-- Unnamed () -->
+            <div id="u300" class="text">
+                <p id="cache4"><span id="cache5 nextWeek" class="position6">&gt;</span></p>
+            </div>
+        </div>
+        <div style="font-size: 18px;left: 170px">
+            <p class="yellow">未审核</p>
+        </div>
+        <div style="font-size: 18px;left: 270px">
+            <p class="green">已通过</p>
+        </div>
+        <div style="font-size: 18px;left: 370px">
+            <p class="red">已驳回</p>
+        </div>
+    </div>
+    <div></div>
+    </div>
+    <div class="jumbotron xhh_lflf">
+
+        <div class="container-fluid ">
+            <div></div>
+            <div class="row ">
+                <div class="row col-xs-6 ">
+                    <div class="col-xs-3 xhh_rsda">
+                        <span>会议室</span>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda">
+                        <span>星期一</span>
+                        <span class="visible-lg" id="day1"></span>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda">
+                        <span>星期二</span>
+                        <span class="visible-lg" id="day2"></span>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda">
+                        <span>星期三</span>
+                        <span class="visible-lg" id="day3"></span>
+                    </div>
+                </div>
+                <div class="row col-xs-6">
+                    <div class="col-xs-3 xhh_rsda">
+                        <span>星期四</span>
+                        <span class="visible-lg" id="day4"></span>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda">
+                        <span>星期五</span>
+                        <span class="visible-lg" id="day5"></span>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda">
+                        <span>星期六</span>
+                        <span class="visible-lg" id="day6"></span>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda">
+                        <span>星期天</span>
+                        <span class="visible-lg" id="day7"></span>
+                    </div>
+                </div>
+            </div>
+            <div></div>
+        </div>
+        <div class="container-fluid">
+            <div></div>
+            <div class="row">
+                <div class="row col-xs-6 ">
+                    <div class="col-xs-3 xhh_rsda xhh_rsd">
+                        <p class="room">221</p>
+
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room221day0" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click00">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room221day1" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click01">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4" style="z-index: 3">
+                        <span id="room221day2" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click02">点击申请</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-xs-6 ">
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room221day3" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click03">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room221day4" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click04">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room221day5" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click05">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room221day6" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click06">点击申请</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div></div>
+        </div>
+
+        <div class="container-fluid">
+            <div></div>
+            <div class="row">
+                <div class="row col-xs-6 ">
+                    <div class="col-xs-3 xhh_rsda xhh_rsd">
+                        <p class="room">208</p>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room208day0" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click10">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room208day1" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click11">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4" style="z-index: 3">
+                        <span id="room208day2" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click12">点击申请</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-xs-6">
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room208day3" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click13">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room208day4" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click14">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room208day5" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click15">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room208day6" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click16">点击申请</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div></div>
+        </div>
+
+        <div class="container-fluid">
+            <div></div>
+            <div class="row ">
+                <div class="row col-xs-6 ">
+                    <div class="col-xs-3 xhh_rsda xhh_rsd">
+                        <p class="room">502B</p>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room502Bday0" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click20">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room502Bday1" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click21">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4" style="z-index: 3">
+                        <span id="room502Bday2" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click22">点击申请</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-xs-6">
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room502Bday3" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click23">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room502Bday4" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click24">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room502Bday5" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click25">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room502Bday6" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click26">点击申请</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div></div>
+        </div>
+
+        <div class="container-fluid">
+            <div></div>
+            <div class="row ">
+                <div class="row col-xs-6 ">
+                    <div class="col-xs-3 xhh_rsda xhh_rsd">
+                        <p class="room">411</p>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room411day0" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click30">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room411day1" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click31">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4" style="z-index: 3">
+                        <span id="room411day2" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click32">点击申请</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-xs-6">
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room411day3" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click33">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room411day4" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click34">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room411day5" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click35">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room411day6" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click36">点击申请</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div></div>
+        </div>
+
+        <div class="container-fluid">
+            <div></div>
+            <div class="row ">
+                <div class="row col-xs-6 ">
+                    <div class="col-xs-3 xhh_rsda xhh_rsd">
+                        <p class="room">106</p>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room106day0" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click40">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room106day1" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click41">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4" style="z-index: 3">
+                        <span id="room106day2" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click42">点击申请</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-xs-6">
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room106day3" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click43">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room106day4" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click44">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room106day5" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click45">点击申请</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 xhh_rsda xhh_rsd btn4">
+                        <span id="room106day6" class="qc"></span>
+                        <div class="btnbg-x">
+                            <span class="xhh_sck btn-primary btn-default btn-sm" data-toggle="modal" data-target="#myModal" id="click46">点击申请</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div></div>
+        </div>
+    </div>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">提交申请</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="">
+                        <div class="jq22-register-form-item">
+                            <input type="text" name="applicant" placeholder="姓名" class="txt01 f-r3 required" id="applicant">
+                        </div>
+                        <div class="jq22-register-form-item">
+                            <input type="text" name="meetingName" placeholder="会议名称" class="txt01 f-r3 required" id="meetingName">
+                        </div>
+                        <div class="jq22-register-form-item">
+                            <input type="text" name="tel" placeholder="联系方式" class="txt01 f-r3 required" id="tel">
+                        </div>
+                        <div class="jq22-register-form-item">
+                            <div class="panel panel-default">
+                                <div class="panel-body timec">
+                                    <div class="col-lg-2 timeStyle col-md-2">
+                                        time
+                                    </div>
+                                    <div class="xhhSelect">
+                                        <select id="starH" class="form-control theselect" name='starH'>
+                                    <option value="00">0</option>
+                                    <option value="01">1</option>
+                                    <option value="02">2</option>
+                                    <option value="03">3</option>
+                                    <option value="04">4</option>
+                                    <option value="05">5</option>
+                                    <option value="06">6</option>
+                                    <option value="07">7</option>
+                                    <option value="08">8</option>
+                                    <option value="09">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                    <option value="16">16</option>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                                    <option value="21">21</option>
+                                    <option value="22">22</option>
+                                    <option value="23">23</option>
+                                </select>
+                                    </div>
+
+                                    <div class="xhhSelect">
+                                        <select id="starM" class="form-control theselect" name='starM'>
+                                  <option value="00">0</option>
+                                  <option value="01">1</option>
+                                  <option value="02">2</option>
+                                  <option value="03">3</option>
+                                  <option value="04">4</option>
+                                  <option value="05">5</option>
+                                  <option value="06">6</option>
+                                  <option value="07">7</option>
+                                  <option value="08">8</option>
+                                  <option value="09">9</option>
+                              </select>
+                                    </div>
+                                    <div class="henStyle">
+                                        —
+                                    </div>
+                                    <div class="xhhSelect">
+                                        <select id="endH" class="form-control theselect" name='endH'>
+                                  <option value="00">0</option>
+                                  <option value="01">1</option>
+                                  <option value="02">2</option>
+                                  <option value="03">3</option>
+                                  <option value="04">4</option>
+                                  <option value="05">5</option>
+                                  <option value="06">6</option>
+                                  <option value="07">7</option>
+                                  <option value="08">8</option>
+                                  <option value="09">9</option>
+                                  <option value="10">10</option>
+                                  <option value="11">11</option>
+                                  <option value="12">12</option>
+                                  <option value="13">13</option>
+                                  <option value="14">14</option>
+                                  <option value="15">15</option>
+                                  <option value="16">16</option>
+                                  <option value="17">17</option>
+                                  <option value="18">18</option>
+                                  <option value="19">19</option>
+                                  <option value="20">20</option>
+                                  <option value="21">21</option>
+                                  <option value="22">22</option>
+                                  <option value="23">23</option>
+                              </select>
+                                    </div>
+                                    <div class="xhhSelect">
+                                        <select id="endM" class="form-control theselect" name='endM'>
+                                  <option value="00">0</option>
+                                  <option value="01">1</option>
+                                  <option value="02">2</option>
+                                  <option value="03">3</option>
+                                  <option value="04">4</option>
+                                  <option value="05">5</option>
+                                  <option value="06">6</option>
+                                  <option value="07">7</option>
+                                  <option value="08">8</option>
+                                  <option value="09">9</option>
+                              </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="jq22-register-form-item">
+                            <input type="text" name="code" placeholder="验证码" class="txt01 f-r3 required" id="code">
+                            <img src="room_reservation/validateCode" alt="验证码" onclick="changeCode()" id="verifyCode-img">
+                        </div>
+                        <div class="jq22-register-form-item">
+                            <textarea placeholder=" 申请理由" type="text" cols="41" rows="4" maxlength="600" class="form form-control" id="remarks"></textarea>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="jq22-btn-reg">提交更改</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal -->
+    </div>
+</body>
+<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+<script src="./框架/jquery-3.4.1.js"></script>
+<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+<script src="./框架/bootstrap-3.3.7-dist/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script src="./js/index.js"></script>
+
+</html>

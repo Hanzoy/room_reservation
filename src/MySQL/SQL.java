@@ -73,6 +73,16 @@ public class SQL {
         }
     }
 
+    public static List<Map<String,Object>> getOrderByAny(String data){
+        try{
+            String sql = "select * FROM theOrder where id = ? OR room = ? OR date like ? OR time like ? OR applicant like ? OR tel = ? OR meetingName like ?";
+            List<Map<String,Object>> arr = jdbcTemplate.queryForList(sql,data,data,"%"+data+"%","%"+data+"%","%"+data+"%",data,"%"+data+"%");
+            return arr;
+        }catch (DataAccessException e){
+            return null;
+        }
+    }
+
     public static boolean upDataStatusById(int id,int status) throws DataAccessException {
         Map<String,Object> map = null;
         try{
@@ -87,6 +97,21 @@ public class SQL {
             String sql = "update theOrder set status = ? where id = ?";
             jdbcTemplate.update(sql,status,id);
             return true;
+        }
+    }
+
+    public static void upUserPwd(String account,String pwd){
+        String sql = "update user set pwd = ? where account = ?";
+        jdbcTemplate.update(sql,pwd,account);
+    }
+
+    public static List<Map<String,Object>> getAllOrder(){
+        try {
+            String sql = "select * from theOrder ";
+            List<Map<String, Object>> arr = jdbcTemplate.queryForList(sql);
+            return arr;
+        }catch (DataAccessException e){
+            return null;
         }
     }
 }
