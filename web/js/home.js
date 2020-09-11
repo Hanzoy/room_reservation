@@ -221,18 +221,18 @@ function showMore(id) {
         dataType: 'json',
         success: function(data) {
             if (data.status == 0) {
-                $("#room").text(data.data.room);
-                $("#applicant").text(data.data.applicant);
-                $("#time").text(data.data.time);
-                $("#tel").text(data.data.tel);
-                $("#date").text(data.data.date);
-                $("#remarks").text(data.data.remarks);
+                $("#room").val(data.data.room);
+                $("#applicant").val(data.data.applicant);
+                $("#time").val(data.data.time);
+                $("#tel").val(data.data.tel);
+                $("#date").val(data.data.date);
+                $("#remarks").val(data.data.remarks);
                 if (data.data.status == 0) {
-                    $("#status").text("未审核");
+                    $("#status").val("未审核");
                 } else if (data.data.status == 1) {
-                    $("#status").text("已通过");
+                    $("#status").val("已通过");
                 } else if (data.data.status == 2) {
-                    $("#status").text("已驳回");
+                    $("#status").val("已驳回");
                 }
 
                 showCon();

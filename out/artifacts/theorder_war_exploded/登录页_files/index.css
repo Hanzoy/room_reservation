@@ -59,14 +59,14 @@ body, html {
 
 .LoginUserBoxOut {
     margin: auto;
-    width: 325px
+    width: 325px;
 }
 
 .LoginUserBox {
     width: 325px;
     height: 42px;
     background: #fff;
-    border: 1px solid #ccc;
+    border: 2px solid rgba(0,0,0,0.6);
     border-radius: 3px;
     margin-bottom: 30px;
     position: relative
@@ -898,5 +898,6 @@ body, html {
 }
 
 .none {
+    border: 2px rgba(0,0,0,0.6) !important;
     display: none;
 }

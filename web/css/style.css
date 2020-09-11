@@ -604,14 +604,17 @@ html {
 
 .position1 {
     left: 10px;
+    top:10px;
 }
 
 .position2 {
     left: 40px;
+    top: 10px;
 }
 
 .position3 {
     left: 95px;
+    top: 10px
 }
 
 .position4 {
