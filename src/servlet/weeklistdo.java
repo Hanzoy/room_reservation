@@ -27,11 +27,11 @@ public class weeklistdo extends HttpServlet {
         HashMap<String, Object> data = new HashMap<>();
         int size=0;
 
-        List<Map<String,Object>> list = new ArrayList<>();
+        List<Map<String, Object>> list = new ArrayList<>();
 
         List<String> Days = OtherUtils.getTimes();
         for(String day: Days){
-            List<Map<String,Object>> arr = SQL.getOrderByDate(day);
+            List<Map<String, Object>> arr = SQL.getOrderByDate(day);
             if((!arr.isEmpty())&&arr!=null) {
                 for (Map<String, Object> order : arr) {
                     size++;
@@ -46,7 +46,8 @@ public class weeklistdo extends HttpServlet {
         data.put("list",list);
         map.put("data",data);
         map.put("status",0);
-
+        map.put("week", OtherUtils.getWeek());
+        map.put("date",OtherUtils.getDate());
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValue(response.getWriter(),map);
 
