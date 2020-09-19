@@ -21,6 +21,20 @@ import java.util.*;
 
 public class OtherUtils {
     /**
+     * 跨域问题解决！！！！！！！
+     *         Cookie cookie = new Cookie("12", "34567");
+     *         cookie.setDomain("127.0.0.1");
+     *         cookie.setPath("/");
+     *         response.addCookie(cookie);
+     *
+     *         String origin = request.getHeader("Origin");
+     *         // 添加白名单 要匹配到请求域名+端口 注意端口号后无斜杠
+     *         response.setHeader("Access-Control-Allow-Origin", origin);
+     *         // 跨Cookie
+     *         response.setHeader("Access-Control-Allow-Credentials", "true");
+     */
+
+    /**
      * ���ñ���ͷ
      *
      * @param request
