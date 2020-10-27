@@ -8,7 +8,7 @@ import javax.servlet.http.*;
 import java.io.IOException;
 
 /**
- * ÑéÖ¤Âë
+ * ï¿½ï¿½Ö¤ï¿½ï¿½
  */
 
 @WebServlet("/room_reservation/validateCode")
@@ -16,18 +16,18 @@ public class validateCode extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         response.setContentType("image/jpeg");
-        //½ûÖ¹Í¼Ïñ»º´æ¡£
+        //ï¿½ï¿½Ö¹Í¼ï¿½ñ»º´æ¡£
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Access-Control-Allow-Origin","*");
         response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
         response.setHeader("Access-Control-Allow-Credentials","true");
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
-        //180¸ß£¬40¿í£¬5¸öÊý×Ö£¬50¸ÉÈÅÏß
+        //180ï¿½ß£ï¿½40ï¿½ï¿½5ï¿½ï¿½ï¿½ï¿½ï¿½Ö£ï¿½50ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         ValidateCode verifyCode = new ValidateCode(180,40,5,50);
         verifyCode.write(response.getOutputStream());
         String code = verifyCode.getCode();
-        //½«ÑéÖ¤Âë±£´æÔÚsessionÖÐ
+        //ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ë±£ï¿½ï¿½ï¿½ï¿½sessionï¿½ï¿½
         session.setAttribute("code", code);
     }
 

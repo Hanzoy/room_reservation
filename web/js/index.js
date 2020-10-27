@@ -10,7 +10,6 @@ $(document).ready(function() {
     $("#jq22-btn-reg").click(function(){
         var applicant = $("#applicant").val();
         var meetingName = $("#meetingName").val();
-        var tel = $("#tel").val();
         var starH = $("#starH").val();
         var starM = $("#starM").val();
         var endH = $("#endH").val();
@@ -18,7 +17,7 @@ $(document).ready(function() {
         var code = $("#code").val();
         var remarks = $("#remarks").val();
         // alert(applicant+":"+meetingName+":"+tel+":"+starH+":"+starM+":"+endH+":"+endM+":"+code+":"+remarks+":"+room+":"+date)
-        if(applicant.length==0||meetingName.length==0||tel.length==0||starM.length==0||starH.length==0||endM.length==0||endH.length==0||code.length==0||remarks.length==0||date.length==0){
+        if(applicant.length==0||meetingName.length==0||starM.length==0||starH.length==0||endM.length==0||endH.length==0||code.length==0||remarks.length==0||date.length==0){
             alert("请完善信息")
         }else{
             $.ajax({
@@ -31,7 +30,6 @@ $(document).ready(function() {
                     date:date,
                     time:starH+":"+starM+"-"+endH+":"+endM,
                     applicant:applicant,
-                    tel:tel,
                     meetingName:meetingName,
                     remarks:remarks
                 },
@@ -164,7 +162,7 @@ function getOrder(week) {
                     }else if(data.data.list[i].status==2){
                         color_ = "color_red";
                     }
-                    $(kr).append("<span style=\"font-size:16px; display:inline-block;\" class=\""+color_+"\">"+data.data.list[i].applicant+" "+data.data.list[i].time+" "+data.data.list[i].tel+" </span>")
+                    $(kr).append("<span style=\"font-size:16px; display:inline-block;\" class=\""+color_+"\">"+data.data.list[i].applicant+" "+data.data.list[i].time+" </span>")
                 }
             }
         }

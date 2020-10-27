@@ -30,9 +30,7 @@ a:hover {
 .xhh_rsda {
     border: solid;
     border-width: 1px;
-    height: 40px;
-    min-height: 3rem;
-    max-height: 13rem;
+    height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
     /*overflow-y:scroll;*/
@@ -42,6 +40,7 @@ a:hover {
 }
 
 .xhh_rsda>span {
+    width: 100%;
     float: left;
     font-size: 16px;
     margin-top: 10px;
@@ -54,7 +53,7 @@ a:hover {
 }
 
 .xhh_rsd {
-    height: 120px;
+    height: 100%;
 }
 
 .room {
@@ -65,11 +64,11 @@ a:hover {
 
 .xhh_lflf {
     padding-left: 5%;
+    height: 100%;
 }
 
 .xhh_sck {
-    position: relative;
-    left: 30px;
+    left: 0px;
 }
 
 .xhh_btn {

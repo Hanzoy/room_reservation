@@ -52,7 +52,16 @@ public class SQL {
             return false;
         }
     }
-
+    public static User loginGet(User loginUser){
+        try{
+            String sql = "select * from user where account = ? AND pwd = ?";
+            User user = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class),loginUser.getAccount(),loginUser.getPwd());
+            if(user!=null) return user;
+            else return null;
+        }catch (DataAccessException e){
+            return null;
+        }
+    }
     public static List<Map<String,Object>> getOrderByDateAndStatus(String date, int status){
         try {
             String sql = "select * from theOrder where date = ? AND status = ?";
@@ -94,8 +103,15 @@ public class SQL {
         if(map == null){
             return false;
         }else {
-            String sql = "update theOrder set status = ? where id = ?";
-            jdbcTemplate.update(sql,status,id);
+            String sql;
+            if(status!=3){
+                sql = "update theOrder set status = ? where id = ?";
+                jdbcTemplate.update(sql,status,id);
+            }else{
+                sql = "delete from theOrder where id = ?";
+                jdbcTemplate.update(sql,id);
+            }
+
             return true;
         }
     }
@@ -107,7 +123,7 @@ public class SQL {
 
     public static List<Map<String,Object>> getAllOrder(){
         try {
-            String sql = "select * from theOrder ";
+            String sql = "select * from theOrder order by date DESC, time DESC";
             List<Map<String, Object>> arr = jdbcTemplate.queryForList(sql);
             return arr;
         }catch (DataAccessException e){

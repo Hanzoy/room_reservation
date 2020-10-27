@@ -33,6 +33,15 @@ public class weekdo extends HttpServlet {
         List<String> weeks = OtherUtils.getTimes(week,Days);
 
 
+        //=====================
+        List<Map<String, Object>> allOrder = SQL.getAllOrder();
+        if(allOrder == null){
+            map.put("std", "数据库连接错误");
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.writeValue(response.getWriter(),map);
+        }
+        //=====================
+
         for(String day: Days){
             List<Map<String, Object>> arr = SQL.getOrderByDate(day);
             if(arr!=null&&(!arr.isEmpty())) {

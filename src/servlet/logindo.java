@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- * ¹ÜÀíÔ±µÇÂ½Ò³Ãæ
+ * ç®¡ç†å‘˜ç™»é™†
  */
 
 @WebServlet("/room_reservation/login.do")
@@ -25,13 +25,14 @@ public class logindo extends HttpServlet {
 
         User loginUser = new User();
         OtherUtils.getRequest(loginUser,request);
-
-        if(SQL.login(loginUser)){
+        User user = SQL.loginGet(loginUser);
+        if(user != null){
             map.put("status",0);
-            map.put("msg","µÇÂ½³É¹¦");
+            map.put("msg","ç™»é™†æˆåŠŸ");
         }else{
             map.put("status",1);
-            map.put("msg","µÇÂ½Ê§°Ü");
+            map.put("msg","ç™»é™†å¤±è´¥");
+            map.put("user",user);
         }
 
         OtherUtils.addCookie(loginUser,response);

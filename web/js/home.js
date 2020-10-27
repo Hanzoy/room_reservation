@@ -27,7 +27,7 @@ $(document).ready(function() {
                 // if(data.data.list[i].status==0){
                 stu = "未审核";
                 // }
-                let tr = "<tr onclick=\"showMore(" + data.data.list[i].id + ")\" data-toggle=\"modal\" data-target=\"#myModal2\"><td>" + (i + 1) + "</td><td>" + data.data.list[i].applicant + "</td><td>" + data.data.list[i].room + "</td><td>" + data.data.list[i].tel + "</td><td>" + data.data.list[i].time + "</td><td>" + data.data.list[i].date + "</td><td>" + data.data.list[i].remarks + "</td><td>" + stu + "</td><td><div class=\"PublicTableBtnIcon Color3Btn \" onclick=\"agree(" + data.data.list[i].id + ")\"><span>同意</span></div><div class=\"PublicTableBtnIcon Color4Btn \" onclick=\"deny(" + data.data.list[i].id + ")\"><span>拒绝</span></div></td></tr>"
+                let tr = "<tr onclick=\"showMore(" + data.data.list[i].id + ")\" data-toggle=\"modal\" data-target=\"#myModal2\"><td>" + (i + 1) + "</td><td>" + data.data.list[i].applicant + "</td><td>" + data.data.list[i].room + "</td><td>" + data.data.list[i].time + "</td><td>" + data.data.list[i].date + "</td><td>" + data.data.list[i].remarks + "</td><td>" + stu + "</td><td><div class=\"PublicTableBtnIcon Color3Btn \" onclick=\"agree(" + data.data.list[i].id + ")\"><span>同意</span></div><div class=\"PublicTableBtnIcon Color5Btn \" onclick=\"deny(" + data.data.list[i].id + ")\"><span>驳回</span></div><div class=\"PublicTableBtnIcon Color4Btn \" onclick=\"dele(" + data.data.list[i].id + ")\"><span>取消</span></div></td></tr>"
                 $("#boddy").append(tr);
             }
         }
@@ -54,7 +54,7 @@ $(document).ready(function() {
                     // if(data.data.list[i].status==0){
                     stu = "未审核";
                     // }
-                    let tr = "<tr onclick=\"showMore(" + data.data.list[i].id + ")\" data-toggle=\"modal\" data-target=\"#myModal2\"><td>" + (i + 1) + "</td><td>" + data.data.list[i].applicant + "</td><td>" + data.data.list[i].room + "</td><td>" + data.data.list[i].tel + "</td><td>" + data.data.list[i].time + "</td><td>" + data.data.list[i].date + "</td><td>" + data.data.list[i].remarks + "</td><td>" + stu + "</td><td><div class=\"PublicTableBtnIcon Color3Btn \" onclick=\"agree(" + data.data.list[i].id + ")\"><span>同意</span></div><div class=\"PublicTableBtnIcon Color4Btn \" onclick=\"deny(" + data.data.list[i].id + ")\"><span>拒绝</span></div></td></tr>"
+                    let tr = "<tr onclick=\"showMore(" + data.data.list[i].id + ")\" data-toggle=\"modal\" data-target=\"#myModal2\"><td>" + (i + 1) + "</td><td>" + data.data.list[i].applicant + "</td><td>" + data.data.list[i].room + "</td><td>" + data.data.list[i].time + "</td><td>" + data.data.list[i].date + "</td><td>" + data.data.list[i].remarks + "</td><td>" + stu + "</td><td><div class=\"PublicTableBtnIcon Color3Btn \" onclick=\"agree(" + data.data.list[i].id + ")\"><span>同意</span></div><div class=\"PublicTableBtnIcon Color5Btn \" onclick=\"deny(" + data.data.list[i].id + ")\"><span>驳回</span></div><div class=\"PublicTableBtnIcon Color4Btn \" onclick=\"dele(" + data.data.list[i].id + ")\"><span>取消</span></div></td></tr>"
                     $("#boddy").append(tr);
                 }
             }
@@ -83,7 +83,7 @@ $(document).ready(function() {
                     } else if (data.data.list[i].status == 2) {
                         stu = "已驳回";
                     }
-                    let tr = "<tr onclick=\"showMore(" + data.data.list[i].id + ")\" data-toggle=\"modal\" data-target=\"#myModal2\"><td>" + (i + 1) + "</td><td>" + data.data.list[i].applicant + "</td><td>" + data.data.list[i].room + "</td><td>" + data.data.list[i].tel + "</td><td>" + data.data.list[i].time + "</td><td>" + data.data.list[i].date + "</td><td>" + data.data.list[i].remarks + "</td><td>" + stu + "</td><td><div class=\"PublicTableBtnIcon Color3Btn \" onclick=\"agree(" + data.data.list[i].id + ")\"><span>同意</span></div><div class=\"PublicTableBtnIcon Color4Btn \" onclick=\"deny(" + data.data.list[i].id + ")\"><span>拒绝</span></div></td></tr>"
+                    let tr = "<tr onclick=\"showMore(" + data.data.list[i].id + ")\" data-toggle=\"modal\" data-target=\"#myModal2\"><td>" + (i + 1) + "</td><td>" + data.data.list[i].applicant + "</td><td>" + data.data.list[i].room + "</td><td>" + data.data.list[i].time + "</td><td>" + data.data.list[i].date + "</td><td>" + data.data.list[i].remarks + "</td><td>" + stu + "</td><td><div class=\"PublicTableBtnIcon Color3Btn \" onclick=\"agree(" + data.data.list[i].id + ")\"><span>同意</span></div><div class=\"PublicTableBtnIcon Color5Btn \" onclick=\"deny(" + data.data.list[i].id + ")\"><span>驳回</span></div><div class=\"PublicTableBtnIcon Color4Btn \" onclick=\"dele(" + data.data.list[i].id + ")\"><span>取消</span></div></td></tr>"
                     $("#boddy").append(tr);
                 }
             }
@@ -162,7 +162,7 @@ $(document).ready(function() {
                             stu = "已驳回";
                         }
 
-                        let tr = "<tr onclick=\"showMore(" + data.data[i].id + ")\" data-toggle=\"modal\" data-target=\"#myModal2\"><td>" + i + "</td><td>" + data.data[i].applicant + "</td><td>" + data.data[i].room + "</td><td>" + data.data[i].tel + "</td><td>" + data.data[i].time + "</td><td>" + data.data[i].date + "</td><td>" + data.data[i].remarks + "</td><td>" + stu + "</td><td><div class=\"PublicTableBtnIcon Color3Btn \" onclick=\"agree(" + data.data[i].id + ")\"><span>同意</span></div><div class=\"PublicTableBtnIcon Color4Btn \" onclick=\"deny(" + data.data[i].id + ")\"><span>拒绝</span></div></td></tr>"
+                        let tr = "<tr onclick=\"showMore(" + data.data[i].id + ")\" data-toggle=\"modal\" data-target=\"#myModal2\"><td>" + i + "</td><td>" + data.data[i].applicant + "</td><td>" + data.data[i].room + "</td><td>" + data.data[i].time + "</td><td>" + data.data[i].date + "</td><td>" + data.data[i].remarks + "</td><td>" + stu + "</td><td><div class=\"PublicTableBtnIcon Color3Btn \" onclick=\"agree(" + data.data[i].id + ")\"><span>同意</span></div><div class=\"PublicTableBtnIcon Color5Btn \" onclick=\"deny(" + data.data[i].id + ")\"><span>驳回</span></div><div class=\"PublicTableBtnIcon Color4Btn \" onclick=\"dele(" + data.data[i].id + ")\"><span>取消</span></div></td></tr>"
                         $("#boddy").append(tr);
                     }
                 } else {
@@ -178,6 +178,7 @@ $(document).ready(function() {
 })
 
 function agree(id) {
+    window.location.reload();
     $.ajax({
         type: 'post',
         url: 'room_reservation/change_state.do',
@@ -195,12 +196,31 @@ function agree(id) {
 }
 
 function deny(id) {
+    window.location.reload();
     $.ajax({
         type: 'post',
         url: 'room_reservation/change_state.do',
         data: {
             id: id,
             status: 2
+        },
+        dataType: 'json',
+        success: function(data) {
+            if (data.status == 0) {
+                window.location.reload();
+            }
+        }
+    })
+}
+
+function dele(id) {
+    window.location.reload();
+    $.ajax({
+        type: 'post',
+        url: 'room_reservation/change_state.do',
+        data: {
+            id: id,
+            status: 3
         },
         dataType: 'json',
         success: function(data) {

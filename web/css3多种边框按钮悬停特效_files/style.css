@@ -265,6 +265,7 @@ li {
 }
 
 .btn4 .btnbg-x {
+    width: 100%;
     background: #ebebeb;
     opacity: 0;
     z-index: -1;
